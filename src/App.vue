@@ -1,3 +1,5 @@
+/* eslint-disable vue/valid-@ */
+
 <template>
   <div id="app">
     <section class="hero">
