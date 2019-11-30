@@ -1,11 +1,8 @@
-/* eslint-disable vue/valid-@ */
-
 <template>
   <div id="app">
     <section class="hero">
       <div class="title-bar">
-        <b-icon icon="settings" size="is-large" type="is-dark" @click.native="openModal()">
-        </b-icon>
+        <b-icon icon="settings" size="is-large" type="is-dark" @click.native="openModal()" />
         <h1 class="page-title">
           {{ title }}
         </h1>
