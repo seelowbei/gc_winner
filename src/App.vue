@@ -31,17 +31,15 @@
             </div>
           </div>
         </div>
-        <div class="custom-modal modal-mask" id="modalSpinwheel" v-if="modalPrize">
-          <div slot="body">
-            <a href="" @click.prevent="hidePrize()" class="modal-dismiss">
-              <i class="icon_close"></i>
-            </a>
+        <b-modal :active.sync="modalPrize" custom-class="prize">
+          <canvas id="winner-canvas"></canvas>
+          <section class="winner">
             <h2>
               Yay you got the prize!!
             </h2>
             <h1>{{ prizeName }}</h1>
-          </div>
-        </div>
+          </section>
+        </b-modal>
       </section>
     </div>
     <b-modal :active.sync="modalActive" has-modal-card full-screen :can-cancel="false">
@@ -106,6 +104,7 @@
 
 <script>
 import * as Winwheel from "vue-winwheel/Winwheel";
+import ConfettiGenerator from "confetti-js";
 
 export default {
   name: "app",
@@ -237,7 +236,7 @@ export default {
       modalPrize: false,
       wheelPower: 1,
       wheelSpinning: false,
-      prizeName: "BUY 1 GET 1",
+      prizeName: "",
       WinWheelOptions: {
         textFontSize: 14,
         outterRadius: 410,
@@ -273,7 +272,7 @@ export default {
     },
     addOption: function() {
       if (this.option) {
-        const fillColor = this.fillColors[(this.segments.length + 1) % this.fillColorsLength];
+        const fillColor = this.getFillColor();
         const newOption = {
           textFillStyle: "#fff",
           fillStyle: fillColor,
@@ -284,6 +283,9 @@ export default {
         this.segments.push(newOption);
         this.option = null;
       }
+    },
+    getFillColor: function() {
+      return this.fillColors[(this.segments.length + 1) % this.fillColorsLength];
     },
     removeOption: function(index) {
       this.segments.splice(index, 1);
@@ -305,8 +307,8 @@ export default {
           segments: this.segments,
           animation: {
             type: "spinToStop",
-            duration: 5,
-            spins: 5,
+            duration: Math.ceil(Math.random() * 10),
+            spins: Math.ceil(Math.random() * 20),
             callbackFinished: this.onFinishSpin
           }
         });
@@ -329,7 +331,7 @@ export default {
         this.theWheel.stopAnimation(false);
       }
 
-      this.theWheel.rotationAngle = 0; // Re-set the wheel angle to 0 degrees.
+      this.theWheel.rotationAngle = 0;
       this.theWheel.draw();
       this.wheelSpinning = false;
     },
@@ -341,6 +343,14 @@ export default {
     onFinishSpin: function(indicatedSegment) {
       this.prizeName = indicatedSegment.text;
       this.showPrize();
+
+      setTimeout(() => {
+        const confettiSettings = {
+          target: "winner-canvas"
+        };
+        const confetti = new ConfettiGenerator(confettiSettings);
+        confetti.render();
+      }, 300);
     }
   },
   mounted() {
@@ -529,5 +539,16 @@ body {
   border-radius: 2px;
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   letter-spacing: 2px;
+}
+
+.prize .modal-content {
+  /* height: 75vh; */
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center; */
+}
+.winner {
+  margin-top: -550px;
+  height: 50vh;
 }
 </style>
