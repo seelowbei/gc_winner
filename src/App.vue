@@ -234,10 +234,11 @@ export default {
       loadingPrize: false,
       theWheel: null,
       modalPrize: false,
-      wheelPower: 1,
       wheelSpinning: false,
       prizeName: "",
       WinWheelOptions: {
+        responsive: true,
+        textAlignment: "center",
         textFontSize: 14,
         outterRadius: 410,
         innerRadius: 25,
@@ -304,7 +305,7 @@ export default {
         this.theWheel = new Winwheel.Winwheel({
           ...this.WinWheelOptions,
           numSegments: this.segments.length,
-          segments: this.segments,
+          segments: this.shuffleArray(this.segments),
           animation: {
             type: "spinToStop",
             duration: Math.ceil(Math.random() * 10),
@@ -321,17 +322,17 @@ export default {
       }
     },
     resetWheel: function() {
-      this.theWheel = new Winwheel.Winwheel({
-        ...this.WinWheelOptions,
-        numSegments: this.segments.length,
-        segments: this.shuffleArray(this.segments)
-      });
-
       if (this.wheelSpinning) {
         this.theWheel.stopAnimation(false);
       }
+      this.theWheel = new Winwheel.Winwheel({
+        ...this.WinWheelOptions,
+        numSegments: this.segments.length,
+        segments: this.shuffleArray(this.segments),
+        clearTheCanvas: true,
+        rotationAngle: 0
+      });
 
-      this.theWheel.rotationAngle = 0;
       this.theWheel.draw();
       this.wheelSpinning = false;
     },
@@ -350,7 +351,7 @@ export default {
         };
         const confetti = new ConfettiGenerator(confettiSettings);
         confetti.render();
-      }, 300);
+      }, 200);
     }
   },
   mounted() {
@@ -370,7 +371,7 @@ body {
   overflow: scroll;
 }
 .wheel-wrapper {
-  zoom: 1.3;
+  zoom: 1.2;
 }
 .vue-winwheel div h1:first-child {
   display: none !important;
@@ -390,7 +391,7 @@ body {
 .page-title {
   color: white;
   font-family: "Exo", sans-serif;
-  font-size: 3.2em;
+  font-size: 6vh;
   font-weight: 900;
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
   letter-spacing: 2px;
@@ -436,38 +437,7 @@ body {
 .vue-winwheel h2 {
   margin: 0;
 }
-.vue-winwheel #modalSpinwheel.custom-modal .content-wrapper .content {
-  width: calc(100vw - 30px);
-  padding-top: 52px;
-}
-.vue-winwheel #modalSpinwheel.custom-modal .content-wrapper .content h2 {
-  text-transform: uppercase;
-  color: #b32656;
-  margin-bottom: 16px;
-  margin-top: 0;
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  font-size: 18px;
-  letter-spacing: 1.1px;
-  margin: 0;
-}
-.vue-winwheel #modalSpinwheel.custom-modal .content-wrapper .content p {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  color: black;
-  text-align: center;
-  line-height: 25px;
-}
-.vue-winwheel #modalSpinwheel.custom-modal .content-wrapper .content p strong {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-}
-.vue-winwheel #modalSpinwheel.custom-modal .content-wrapper .content .modal-dismiss {
-  top: 12px;
-  right: 12px;
-}
-.vue-winwheel #modalSpinwheel.custom-modal .content-wrapper .content .modal-dismiss i.icon_close {
-  font-size: 30px;
-  color: #da2a52;
-}
+
 .vue-winwheel canvas#canvas {
   position: relative;
 }
