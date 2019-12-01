@@ -33,11 +33,13 @@
         </div>
         <b-modal :active.sync="modalPrize" custom-class="prize">
           <canvas id="winner-canvas"></canvas>
-          <section class="winner">
-            <h2>
-              Yay you got the prize!!
-            </h2>
-            <h1>{{ prizeName }}</h1>
+          <section class="">
+            <div class="winner">
+              <h2>
+                Yay you got the prize!!
+              </h2>
+              <h1>{{ prizeName }}</h1>
+            </div>
           </section>
         </b-modal>
       </section>
@@ -517,8 +519,27 @@ body {
   flex-direction: column;
   justify-content: center; */
 }
+
+#winner-canvas {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.prize {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+}
 .winner {
-  margin-top: -550px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
   height: 50vh;
 }
 </style>
