@@ -13,7 +13,7 @@
       <section class="vue-winwheel">
         <div class="mobile-container">
           <div class="wheel-wrapper">
-            <div class="canvas-wrapper">
+            <div class="canvas-wrapper" id="canvas-wrapper">
               <canvas id="canvas" width="310" height="310">
                 <p style="{color: white}" align="center">
                   Sorry, your browser doesn't support canvas. Please try Google Chrome.
@@ -21,17 +21,30 @@
               </canvas>
             </div>
             <div class="button-wrapper">
-              <a
+              <b-button
                 class="btn btn-play"
-                href="#"
+                type="is-danger"
+                icon-left="star"
+                icon-right="star"
+                :disabled="wheelSpinning"
                 @click.prevent="startSpin()"
-                v-if="!loadingPrize && !wheelSpinning"
-                >SPIN!</a
               >
+                SPIN
+              </b-button>
+
+              <b-button
+                class="btn btn-shuffle "
+                type="is-light"
+                icon-left="shuffle"
+                :disabled="wheelSpinning"
+                @click.prevent="shuffle()"
+              >
+                SHUFFLE
+              </b-button>
             </div>
           </div>
         </div>
-        <b-modal :active.sync="modalPrize" custom-class="prize">
+        <b-modal :active.sync="modalPrize" custom-class="prize" @close="resetWheel()">
           <canvas id="winner-canvas"></canvas>
           <section class="">
             <div class="winner">
@@ -60,7 +73,22 @@
               @change.native="setTitleType()"
             ></b-input>
           </b-field>
-          <label class="label title-label">Options</label>
+          <div class="options-section">
+            <label class="label title-label">
+              Options
+            </label>
+            <span>
+              <b-button type="is-primary" inverted @click="applyDefaultOptions()">
+                <b-icon icon="undo-variant" size="is-small" type="is-primary" />
+                Use Default
+              </b-button>
+              <b-button type="is-primary" inverted @click="removeAllOptions()">
+                <b-icon icon="delete" size="is-small" type="is-primary" />
+                Delete All
+              </b-button>
+            </span>
+          </div>
+
           <b-field label="" custom-class="title-label">
             <b-input
               name="option"
@@ -69,11 +97,7 @@
               v-model="option"
               v-on:keyup.enter.native="addOption()"
             ></b-input>
-            <b-button
-              class="button is-primary"
-              size="is-medium"
-              icon-left="plus"
-              @click="addOption()"
+            <b-button class="button is-dark" size="is-medium" icon-left="plus" @click="addOption()"
               >Add</b-button
             >
           </b-field>
@@ -123,108 +147,7 @@ export default {
       "#9CC976",
       "#E01A4F"
     ];
-    const segments = [
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#333",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "👻👻"
-      },
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#6A4C93",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "Sam"
-      },
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#8AC926",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "Jany"
-      },
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#1982C4",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "Nazmi"
-      },
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#C3423F",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "Celine"
-      },
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#048BA8",
-        textFontSize: 18,
-        textFontWeight: 100,
-        text: "Thiam Hock"
-      },
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#5887FF",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "Jarrett"
-      },
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#2C2A4A",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "Vincent"
-      },
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#9CC976",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "Zek"
-      },
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#333",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "👻👻"
-      },
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#E01A4F",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "Justin"
-      },
-
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#C3423F",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "YaoJie"
-      },
-
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#6A4C93",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "Jaslyn"
-      },
-      {
-        textFillStyle: "#fff",
-        fillStyle: "#048BA8",
-        textFontSize: 20,
-        textFontWeight: 100,
-        text: "Jason"
-      }
-    ];
+    const segments = JSON.parse(localStorage.getItem("segments")) || this.defaultOptions();
     return {
       titleType: "",
       title: "GC AWARDS",
@@ -233,11 +156,11 @@ export default {
       fillColorsLength: colors.length,
       fillColors: colors,
       segments: segments,
-      loadingPrize: false,
       theWheel: null,
       modalPrize: false,
       wheelSpinning: false,
       prizeName: "",
+      spin: 0,
       WinWheelOptions: {
         responsive: true,
         textAlignment: "center",
@@ -254,6 +177,110 @@ export default {
   },
 
   methods: {
+    defaultOptions: function() {
+      return [
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#333",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "👻👻"
+        },
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#6A4C93",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "Sam"
+        },
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#8AC926",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "Jany"
+        },
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#1982C4",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "Nazmi"
+        },
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#C3423F",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "Celine"
+        },
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#048BA8",
+          textFontSize: 18,
+          textFontWeight: 100,
+          text: "Thiam Hock"
+        },
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#5887FF",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "Jarrett"
+        },
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#2C2A4A",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "Vincent"
+        },
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#9CC976",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "Zek"
+        },
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#333",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "👻👻"
+        },
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#E01A4F",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "Justin"
+        },
+
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#C3423F",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "YaoJie"
+        },
+
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#6A4C93",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "Jaslyn"
+        },
+        {
+          textFillStyle: "#fff",
+          fillStyle: "#048BA8",
+          textFontSize: 20,
+          textFontWeight: 100,
+          text: "Jason"
+        }
+      ];
+    },
     shuffleArray: function(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -265,13 +292,20 @@ export default {
       this.modalActive = false;
       this.titleType = "";
       this.option = null;
-      this.initSpin();
+      this.shuffle();
     },
     openModal: function() {
       this.modalActive = true;
     },
     setTitleType: function() {
       this.titleType = "is-success";
+    },
+    removeAllOptions: function() {
+      this.segments = [];
+      localStorage.clear();
+    },
+    applyDefaultOptions: function() {
+      this.segments = this.defaultOptions();
     },
     addOption: function() {
       if (this.option) {
@@ -284,6 +318,7 @@ export default {
           text: this.option
         };
         this.segments.push(newOption);
+        localStorage.setItem("segments", JSON.stringify(this.segments));
         this.option = null;
       }
     },
@@ -293,6 +328,7 @@ export default {
     removeOption: function(index) {
       this.segments.splice(index, 1);
       this.segments = this.segments;
+      localStorage.setItem("segments", JSON.stringify(this.segments));
     },
     showPrize: function() {
       this.modalPrize = true;
@@ -301,32 +337,45 @@ export default {
       this.modalPrize = false;
     },
     startSpin: function() {
+      if (this.segments.length === 0) {
+        this.$buefy.toast.open({
+          duration: 3000,
+          message: `Please add some options.`,
+          position: "is-top",
+          type: "is-danger"
+        });
+        return;
+      }
       if (this.wheelSpinning === false) {
         this.theWheel.startAnimation();
         this.wheelSpinning = true;
-        this.theWheel = new Winwheel.Winwheel({
-          ...this.WinWheelOptions,
-          numSegments: this.segments.length,
-          segments: this.shuffleArray(this.segments),
-          animation: {
-            type: "spinToStop",
-            duration: Math.ceil(Math.random() * 10),
-            spins: Math.ceil(Math.random() * 20),
-            callbackFinished: this.onFinishSpin
-          }
-        });
+        this.theWheel = new Winwheel.Winwheel(
+          {
+            ...this.WinWheelOptions,
+            numSegments: this.segments.length,
+            segments: this.shuffleArray(this.segments),
+            animation: {
+              type: "spinToStop",
+              duration: Math.ceil(Math.random() * 10),
+              spins: Math.ceil(Math.random() * 20),
+              callbackFinished: this.onFinishSpin
+            }
+          },
+          false
+        );
 
         const prizeNumber = Math.floor(Math.random() * this.segments.length);
         const stopAt = (360 / this.segments.length) * prizeNumber - Math.floor(Math.random() * 60); //random location
         this.theWheel.animation.stopAngle = stopAt;
         this.theWheel.startAnimation();
-        this.wheelSpinning = false;
       }
     },
     resetWheel: function() {
       if (this.wheelSpinning) {
         this.theWheel.stopAnimation(false);
+        this.wheelSpinning = false;
       }
+
       this.theWheel = new Winwheel.Winwheel({
         ...this.WinWheelOptions,
         numSegments: this.segments.length,
@@ -336,16 +385,13 @@ export default {
       });
 
       this.theWheel.draw();
-      this.wheelSpinning = false;
-    },
-    initSpin: function() {
-      this.loadingPrize = true;
-      this.resetWheel();
-      this.loadingPrize = false;
+      this.theWheel.rotationAngle = 0;
     },
     onFinishSpin: function(indicatedSegment) {
+      this.wheelSpinning = false;
       this.prizeName = indicatedSegment.text;
       this.showPrize();
+      this.spin = 1;
 
       setTimeout(() => {
         const confettiSettings = {
@@ -354,10 +400,13 @@ export default {
         const confetti = new ConfettiGenerator(confettiSettings);
         confetti.render();
       }, 200);
+    },
+    shuffle: function() {
+      this.spin > 0 ? window.location.reload() : this.resetWheel();
     }
   },
   mounted() {
-    this.initSpin();
+    this.resetWheel();
   }
 };
 </script>
@@ -443,9 +492,11 @@ body {
 .vue-winwheel canvas#canvas {
   position: relative;
 }
+
 .vue-winwheel .canvas-wrapper {
   position: relative;
 }
+
 .vue-winwheel .canvas-wrapper:after {
   content: "";
   display: block;
@@ -460,6 +511,7 @@ body {
   border: 5px solid white;
   box-sizing: content-box;
 }
+
 .vue-winwheel .canvas-wrapper:before {
   content: "";
   display: block;
@@ -473,9 +525,11 @@ body {
   border-radius: 100%;
   top: 0;
 }
+
 .vue-winwheel .wheel-wrapper {
   position: relative;
 }
+
 .vue-winwheel .wheel-wrapper:before {
   content: "";
   width: 62px;
@@ -491,6 +545,7 @@ body {
   background-size: contain;
   background-position: center;
 }
+
 .vue-winwheel .wheel-wrapper .button-wrapper {
   margin: 0 auto;
   display: flex;
@@ -500,9 +555,8 @@ body {
   width: 231px;
   height: 118px;
 }
-.vue-winwheel .wheel-wrapper .btn.btn-play {
-  padding: 0 58px !important;
-  background: #c4376f;
+
+.vue-winwheel .wheel-wrapper .btn {
   height: 40px;
   line-height: 40px;
   color: white;
@@ -511,13 +565,17 @@ body {
   border-radius: 2px;
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   letter-spacing: 2px;
+  margin-top: 15px;
 }
 
-.prize .modal-content {
-  /* height: 75vh; */
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center; */
+.vue-winwheel .wheel-wrapper .btn.btn-play {
+  background: #c4376f;
+  padding: 0 58px !important;
+}
+
+.vue-winwheel .wheel-wrapper .btn.btn-shuffle {
+  background: #d59eb4;
+  padding: 0 48px !important;
 }
 
 #winner-canvas {
@@ -541,5 +599,14 @@ body {
   align-items: center;
   align-self: center;
   height: 50vh;
+}
+
+.remove-all {
+  margin-left: 5px;
+}
+
+.options-section {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
