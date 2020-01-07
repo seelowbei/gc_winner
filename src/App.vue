@@ -472,7 +472,6 @@ body {
 }
 .vue-winwheel {
   text-align: center;
-  background-image: url("/static/img/obstacle-run/bg-spinner-mobile.svg");
   background-size: cover;
   background-position: center bottom;
   background-repeat: no-repeat;
