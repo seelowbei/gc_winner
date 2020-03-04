@@ -131,30 +131,19 @@
 <script>
 import * as Winwheel from "vue-winwheel/Winwheel";
 import ConfettiGenerator from "confetti-js";
+import { DEFAULT_OPTIONS, COLORS} from "./constants"
 
 export default {
   name: "app",
   data() {
-    const colors = [
-      "#333",
-      "#6A4C93",
-      "#8AC926",
-      "#1982C4",
-      "#C3423F",
-      "#048BA8",
-      "#5887FF",
-      "#2C2A4A",
-      "#9CC976",
-      "#E01A4F"
-    ];
-    const segments = JSON.parse(localStorage.getItem("segments")) || this.defaultOptions();
+    const segments = JSON.parse(localStorage.getItem("segments")) || DEFAULT_OPTIONS;
     return {
       titleType: "",
       title: "GC AWARDS",
       option: null,
       modalActive: false,
-      fillColorsLength: colors.length,
-      fillColors: colors,
+      fillColorsLength: COLORS.length,
+      fillColors: COLORS,
       segments: segments,
       theWheel: null,
       modalPrize: false,
@@ -175,112 +164,7 @@ export default {
       }
     };
   },
-
   methods: {
-    defaultOptions: function() {
-      return [
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#333",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "👻👻"
-        },
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#6A4C93",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "Sam"
-        },
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#8AC926",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "Jany"
-        },
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#1982C4",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "Nazmi"
-        },
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#C3423F",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "Celine"
-        },
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#048BA8",
-          textFontSize: 18,
-          textFontWeight: 100,
-          text: "Thiam Hock"
-        },
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#5887FF",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "Jarrett"
-        },
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#2C2A4A",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "Vincent"
-        },
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#9CC976",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "Zek"
-        },
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#333",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "👻👻"
-        },
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#E01A4F",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "Justin"
-        },
-
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#C3423F",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "YaoJie"
-        },
-
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#6A4C93",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "Jaslyn"
-        },
-        {
-          textFillStyle: "#fff",
-          fillStyle: "#048BA8",
-          textFontSize: 20,
-          textFontWeight: 100,
-          text: "Jason"
-        }
-      ];
-    },
     shuffleArray: function(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -305,7 +189,7 @@ export default {
       localStorage.clear();
     },
     applyDefaultOptions: function() {
-      this.segments = this.defaultOptions();
+      this.segments = DEFAULT_OPTIONS;
     },
     addOption: function() {
       if (this.option) {
@@ -340,7 +224,7 @@ export default {
       if (this.segments.length === 0) {
         this.$buefy.toast.open({
           duration: 3000,
-          message: `Please add some options.`,
+          message: "Please add some options.",
           position: "is-top",
           type: "is-danger"
         });
