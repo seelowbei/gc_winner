@@ -2,7 +2,12 @@
   <div id="app">
     <section class="hero">
       <div class="title-bar">
-        <b-icon icon="settings" size="is-large" type="is-dark" @click.native="openModal()" />
+        <b-icon
+          icon="settings"
+          size="is-large"
+          type="is-dark"
+          @click.native="openModal()"
+        />
         <h1 class="page-title">
           {{ title }}
         </h1>
@@ -16,7 +21,8 @@
             <div class="canvas-wrapper" id="canvas-wrapper">
               <canvas id="canvas" width="310" height="310">
                 <p style="{color: white}" align="center">
-                  Sorry, your browser doesn't support canvas. Please try Google Chrome.
+                  Sorry, your browser doesn't support canvas. Please try Google
+                  Chrome.
                 </p>
               </canvas>
             </div>
@@ -44,7 +50,11 @@
             </div>
           </div>
         </div>
-        <b-modal :active.sync="modalPrize" custom-class="prize" @close="resetWheel()">
+        <b-modal
+          :active.sync="modalPrize"
+          custom-class="prize"
+          @close="resetWheel()"
+        >
           <canvas id="winner-canvas"></canvas>
           <section class="">
             <div class="winner">
@@ -57,11 +67,21 @@
         </b-modal>
       </section>
     </div>
-    <b-modal :active.sync="modalActive" has-modal-card full-screen :can-cancel="false">
+    <b-modal
+      :active.sync="modalActive"
+      has-modal-card
+      full-screen
+      :can-cancel="false"
+    >
       <div class="modal-card" style="width: auto">
         <header class="modal-card-head">
           <p class="modal-card-title">CONFIGURATIONS</p>
-          <b-icon icon="close" size="is-medium" type="is-dark" @click.native="closeModal()" />
+          <b-icon
+            icon="close"
+            size="is-medium"
+            type="is-dark"
+            @click.native="closeModal()"
+          />
         </header>
         <section class="modal-card-body">
           <b-field label="Title" :type="titleType" custom-class="title-label">
@@ -78,7 +98,11 @@
               Options
             </label>
             <span>
-              <b-button type="is-primary" inverted @click="applyDefaultOptions()">
+              <b-button
+                type="is-primary"
+                inverted
+                @click="applyDefaultOptions()"
+              >
                 <b-icon icon="undo-variant" size="is-small" type="is-primary" />
                 Use Default
               </b-button>
@@ -97,12 +121,20 @@
               v-model="option"
               v-on:keyup.enter.native="addOption()"
             ></b-input>
-            <b-button class="button is-dark" size="is-medium" icon-left="plus" @click="addOption()"
+            <b-button
+              class="button is-dark"
+              size="is-medium"
+              icon-left="plus"
+              @click="addOption()"
               >Add</b-button
             >
           </b-field>
           <b-field grouped group-multiline class="options-section">
-            <div class="control" v-bind:key="index" v-for="(item, index) in segments">
+            <div
+              class="control"
+              v-bind:key="index"
+              v-for="(item, index) in segments"
+            >
               <div class="control">
                 <div class="tags has-addons">
                   <span
@@ -122,6 +154,22 @@
               </div>
             </div>
           </b-field>
+
+          <b-field
+            label="Discord Webhook"
+            :type="webhookType"
+            custom-class="webhook-label"
+          >
+            <b-input
+              name="Discord Webhook"
+              expanded
+              size="is-medium"
+              v-model="webhook"
+              @change.native="setWebhookType()"
+            >
+              ></b-input
+            >
+          </b-field>
         </section>
       </div>
     </b-modal>
@@ -131,15 +179,21 @@
 <script>
 import * as Winwheel from "vue-winwheel/Winwheel";
 import ConfettiGenerator from "confetti-js";
-import { DEFAULT_OPTIONS, COLORS} from "./constants"
+import { DEFAULT_OPTIONS, COLORS } from "./constants";
+import axios from "axios";
 
 export default {
   name: "app",
   data() {
-    const segments = JSON.parse(localStorage.getItem("segments")) || DEFAULT_OPTIONS;
+    const segments =
+      JSON.parse(localStorage.getItem("segments")) || DEFAULT_OPTIONS;
+    const title = localStorage.getItem("title") || "GC AWARDS";
+    const webhook = localStorage.getItem("webhook") || "";
     return {
       titleType: "",
-      title: "GC AWARDS",
+      webhookType: "",
+      webhook: webhook,
+      title: title,
       option: null,
       modalActive: false,
       fillColorsLength: COLORS.length,
@@ -159,12 +213,24 @@ export default {
         lineWidth: 8,
         animation: {
           type: "spinOngoing",
-          duration: 0.5
-        }
-      }
+          duration: 0.5,
+        },
+      },
     };
   },
   methods: {
+    validWebhookUrl: function() {
+      const hook = this.webhook;
+      if (hook) {
+        try {
+          new URL(hook);
+        } catch (_) {
+          return false;
+        }
+      }
+
+      return true;
+    },
     shuffleArray: function(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -175,6 +241,7 @@ export default {
     closeModal: function() {
       this.modalActive = false;
       this.titleType = "";
+      this.webhookType = "";
       this.option = null;
       this.shuffle();
     },
@@ -182,7 +249,12 @@ export default {
       this.modalActive = true;
     },
     setTitleType: function() {
+      localStorage.setItem("title", this.title);
       this.titleType = "is-success";
+    },
+    setWebhookType: function() {
+      localStorage.setItem("webhook", this.webhook);
+      this.webhookType = this.validWebhookUrl() ? "is-success" : "is-danger";
     },
     removeAllOptions: function() {
       this.segments = [];
@@ -199,7 +271,7 @@ export default {
           fillStyle: fillColor,
           textFontSize: 20,
           textFontWeight: 100,
-          text: this.option
+          text: this.option,
         };
         this.segments.push(newOption);
         localStorage.setItem("segments", JSON.stringify(this.segments));
@@ -207,7 +279,9 @@ export default {
       }
     },
     getFillColor: function() {
-      return this.fillColors[(this.segments.length + 1) % this.fillColorsLength];
+      return this.fillColors[
+        (this.segments.length + 1) % this.fillColorsLength
+      ];
     },
     removeOption: function(index) {
       this.segments.splice(index, 1);
@@ -226,7 +300,7 @@ export default {
           duration: 3000,
           message: "Please add some options.",
           position: "is-top",
-          type: "is-danger"
+          type: "is-danger",
         });
         return;
       }
@@ -242,14 +316,16 @@ export default {
               type: "spinToStop",
               duration: Math.ceil(Math.random() * 10),
               spins: Math.ceil(Math.random() * 20),
-              callbackFinished: this.onFinishSpin
-            }
+              callbackFinished: this.onFinishSpin,
+            },
           },
           false
         );
 
         const prizeNumber = Math.floor(Math.random() * this.segments.length);
-        const stopAt = (360 / this.segments.length) * prizeNumber - Math.floor(Math.random() * 60); //random location
+        const stopAt =
+          (360 / this.segments.length) * prizeNumber -
+          Math.floor(Math.random() * 60); //random location
         this.theWheel.animation.stopAngle = stopAt;
         this.theWheel.startAnimation();
       }
@@ -265,7 +341,7 @@ export default {
         numSegments: this.segments.length,
         segments: this.shuffleArray(this.segments),
         clearTheCanvas: true,
-        rotationAngle: 0
+        rotationAngle: 0,
       });
 
       this.theWheel.draw();
@@ -276,10 +352,10 @@ export default {
       this.prizeName = indicatedSegment.text;
       this.showPrize();
       this.spin = 1;
-
+      this.postToWebhook();
       setTimeout(() => {
         const confettiSettings = {
-          target: "winner-canvas"
+          target: "winner-canvas",
         };
         const confetti = new ConfettiGenerator(confettiSettings);
         confetti.render();
@@ -287,11 +363,51 @@ export default {
     },
     shuffle: function() {
       this.spin > 0 ? window.location.reload() : this.resetWheel();
-    }
+    },
+    postToWebhook: function() {
+      if (this.prizeName === "👻👻") {
+        return;
+      }
+      if (this.webhook && this.validWebhookUrl()) {
+        // const content = `🥳🥳 ${this.prizeName} won! 🥳🥳`;
+        axios
+          .post(this.webhook, {
+            tts: false,
+            embeds: [
+              {
+                title: this.title,
+                color: 261297,
+                footer: {
+                  text: `${this.prizeName} will host standup tomorrow!`,
+                },
+                thumbnail: {
+                  url:
+                    "https://media.giphy.com/media/3o7WIOU62pfc2Ox76o/giphy.gif",
+                },
+                // image: {
+                //   url: "https://picsum.photos/200",
+                // },
+                fields: [
+                  {
+                    name: "🥳🥳🥳🥳🥳🥳🥳🥳🥳🥳",
+                    value: `Yay, ${this.prizeName} won the prize!!!`,
+                  },
+                ],
+              },
+            ],
+          })
+          .then(function(response) {
+            console.log(response);
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
+    },
   },
   mounted() {
     this.resetWheel();
-  }
+  },
 };
 </script>
 
