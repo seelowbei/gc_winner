@@ -372,7 +372,8 @@ export default {
         // const content = `🥳🥳 ${this.prizeName} won! 🥳🥳`;
         axios
           .post(this.webhook, {
-            tts: false,
+            tts: true,
+            content: `Yay, ${this.prizeName} won the prize!!!`,
             embeds: [
               {
                 title: this.title,
