@@ -2,15 +2,8 @@
   <div id="app">
     <section class="hero">
       <div class="title-bar">
-        <b-icon
-          icon="settings"
-          size="is-large"
-          type="is-dark"
-          @click.native="openModal()"
-        />
-        <h1 class="page-title">
-          {{ title }}
-        </h1>
+        <b-icon icon="settings" size="is-large" type="is-dark" @click.native="openModal()" />
+        <h1 class="page-title">{{ title }}</h1>
       </div>
     </section>
 
@@ -34,54 +27,34 @@
                 icon-right="star"
                 :disabled="wheelSpinning"
                 @click.prevent="startSpin()"
-              >
-                SPIN
-              </b-button>
+              >SPIN</b-button>
 
               <b-button
-                class="btn btn-shuffle "
+                class="btn btn-shuffle"
                 type="is-light"
                 icon-left="shuffle"
                 :disabled="wheelSpinning"
                 @click.prevent="shuffle()"
-              >
-                SHUFFLE
-              </b-button>
+              >SHUFFLE</b-button>
             </div>
           </div>
         </div>
-        <b-modal
-          :active.sync="modalPrize"
-          custom-class="prize"
-          @close="resetWheel()"
-        >
+        <b-modal :active.sync="modalPrize" custom-class="prize" @close="resetWheel()">
           <canvas id="winner-canvas"></canvas>
-          <section class="">
+          <section class>
             <div class="winner">
-              <h2>
-                Yay you got the prize!!
-              </h2>
+              <h2>Yay you got the prize!!</h2>
               <h1>{{ prizeName }}</h1>
             </div>
           </section>
         </b-modal>
       </section>
     </div>
-    <b-modal
-      :active.sync="modalActive"
-      has-modal-card
-      full-screen
-      :can-cancel="false"
-    >
+    <b-modal :active.sync="modalActive" has-modal-card full-screen :can-cancel="false">
       <div class="modal-card" style="width: auto">
         <header class="modal-card-head">
           <p class="modal-card-title">CONFIGURATIONS</p>
-          <b-icon
-            icon="close"
-            size="is-medium"
-            type="is-dark"
-            @click.native="closeModal()"
-          />
+          <b-icon icon="close" size="is-medium" type="is-dark" @click.native="closeModal()" />
         </header>
         <section class="modal-card-body">
           <b-field label="Title" :type="titleType" custom-class="title-label">
@@ -94,26 +67,18 @@
             ></b-input>
           </b-field>
           <div class="options-section">
-            <label class="label title-label">
-              Options
-            </label>
+            <label class="label title-label">Options</label>
             <span>
-              <b-button
-                type="is-primary"
-                inverted
-                @click="applyDefaultOptions()"
-              >
-                <b-icon icon="undo-variant" size="is-small" type="is-primary" />
-                Use Default
+              <b-button type="is-primary" inverted @click="applyDefaultOptions()">
+                <b-icon icon="undo-variant" size="is-small" type="is-primary" />Use Default
               </b-button>
               <b-button type="is-primary" inverted @click="removeAllOptions()">
-                <b-icon icon="delete" size="is-small" type="is-primary" />
-                Delete All
+                <b-icon icon="delete" size="is-small" type="is-primary" />Delete All
               </b-button>
             </span>
           </div>
 
-          <b-field label="" custom-class="title-label">
+          <b-field label custom-class="title-label">
             <b-input
               name="option"
               expanded
@@ -126,22 +91,17 @@
               size="is-medium"
               icon-left="plus"
               @click="addOption()"
-              >Add</b-button
-            >
+            >Add</b-button>
           </b-field>
           <b-field grouped group-multiline class="options-section">
-            <div
-              class="control"
-              v-bind:key="index"
-              v-for="(item, index) in segments"
-            >
+            <div class="control" v-bind:key="index" v-for="(item, index) in segments">
               <div class="control">
                 <div class="tags has-addons">
                   <span
                     class="tag is-large"
                     :style="{ background: item.fillStyle, color: 'white' }"
                   >
-                    <span> {{ item.text }} </span>
+                    <span>{{ item.text }}</span>
                   </span>
                   <a
                     @click="removeOption(index)"
@@ -153,6 +113,16 @@
                 </div>
               </div>
             </div>
+          </b-field>
+
+          <b-field label="Discord Webhook" :type="webhookType" custom-class="webhook-label">
+            <b-input
+              name="Discord Webhook"
+              expanded
+              size="is-medium"
+              v-model="webhook"
+              @change.native="setWebhookType()"
+            >></b-input>
           </b-field>
         </section>
       </div>
@@ -197,15 +167,15 @@ export default {
         lineWidth: 8,
         animation: {
           type: "spinOngoing",
-          duration: 0.5,
-        },
-      },
+          duration: 0.5
+        }
+      }
     };
   },
   computed: {
     standupBotToken: function() {
-      const urlParams = new URLSearchParams(window.location.search)
-      return urlParams.get('token')
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get("token");
     }
   },
   methods: {
@@ -261,7 +231,7 @@ export default {
           fillStyle: fillColor,
           textFontSize: 20,
           textFontWeight: 100,
-          text: this.option,
+          text: this.option
         };
         this.segments.push(newOption);
         localStorage.setItem("segments", JSON.stringify(this.segments));
@@ -290,7 +260,7 @@ export default {
           duration: 3000,
           message: "Please add some options.",
           position: "is-top",
-          type: "is-danger",
+          type: "is-danger"
         });
         return;
       }
@@ -306,8 +276,8 @@ export default {
               type: "spinToStop",
               duration: Math.ceil(Math.random() * 10),
               spins: Math.ceil(Math.random() * 20),
-              callbackFinished: this.onFinishSpin,
-            },
+              callbackFinished: this.onFinishSpin
+            }
           },
           false
         );
@@ -331,7 +301,7 @@ export default {
         numSegments: this.segments.length,
         segments: this.shuffleArray(this.segments),
         clearTheCanvas: true,
-        rotationAngle: 0,
+        rotationAngle: 0
       });
 
       this.theWheel.draw();
@@ -345,7 +315,7 @@ export default {
       this.postToWebhook();
       setTimeout(() => {
         const confettiSettings = {
-          target: "winner-canvas",
+          target: "winner-canvas"
         };
         const confetti = new ConfettiGenerator(confettiSettings);
         confetti.render();
@@ -355,11 +325,16 @@ export default {
       this.spin > 0 ? window.location.reload() : this.resetWheel();
     },
     postToWebhook: function() {
-      if (this.prizeName === "👻👻" || !this.standupBotToken) {
-        console.log('Invalid prize name or stand up bot token.')
+      if (this.prizeName === "👻👻") {
+        console.log("Invalid prize name or stand up bot token.");
         return;
+      } else if (this.standupBotToken) {
+        this.postToSJStandupBot();
+      } else {
+        this.postToInputWebhook();
       }
-
+    },
+    postToSJStandupBot: function() {
       const body = {
         query: `
         mutation ($contributor: String!, $sharing: String!) {
@@ -373,30 +348,65 @@ export default {
         `,
         variables: {
           contributor: "LUCKY SPIN",
-          sharing: `${ this.prizeName } will host the next standup!`,
+          sharing: `${this.prizeName} will host the next standup!`
         }
-      }
+      };
 
-      axios.post(
-        "https://sj-stand-up-bot.herokuapp.com/v1/graphql",
-        body,
-        {
+      axios
+        .post("https://sj-stand-up-bot.herokuapp.com/v1/graphql", body, {
           headers: {
             "content-type": "application/json",
-            "Authorization": `Bearer ${this.standupBotToken}` 
+            Authorization: `Bearer ${this.standupBotToken}`
           }
         })
-      .then(function(response) {
-        console.log(response);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
+    postToInputWebhook: function() {
+      if (this.webhook && this.validWebhookUrl()) {
+        axios
+          .post(this.webhook, {
+            tts: true,
+            content: `Yay, ${this.prizeName} won the prize!!!`,
+            embeds: [
+              {
+                title: this.title,
+                color: 261297,
+                footer: {
+                  text: `🥳🥳 ${this.prizeName} won! 🥳🥳`
+                },
+                thumbnail: {
+                  url:
+                    "https://media.giphy.com/media/3o7WIOU62pfc2Ox76o/giphy.gif"
+                },
+                // image: {
+                //   url: "https://picsum.photos/200",
+                // },
+                fields: [
+                  {
+                    name: "🥳🥳🥳🥳🥳🥳🥳🥳🥳🥳",
+                    value: `Yay, ${this.prizeName} won the prize!!!`
+                  }
+                ]
+              }
+            ]
+          })
+          .then(function(response) {
+            console.log(response);
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
+    }
   },
   mounted() {
     this.resetWheel();
-  },
+  }
 };
 </script>
 
