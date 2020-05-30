@@ -154,22 +154,6 @@
               </div>
             </div>
           </b-field>
-
-          <b-field
-            label="Discord Webhook"
-            :type="webhookType"
-            custom-class="webhook-label"
-          >
-            <b-input
-              name="Discord Webhook"
-              expanded
-              size="is-medium"
-              v-model="webhook"
-              @change.native="setWebhookType()"
-            >
-              ></b-input
-            >
-          </b-field>
         </section>
       </div>
     </b-modal>
@@ -217,6 +201,12 @@ export default {
         },
       },
     };
+  },
+  computed: {
+    standupBotToken: function() {
+      const urlParams = new URLSearchParams(window.location.search)
+      return urlParams.get('token')
+    }
   },
   methods: {
     validWebhookUrl: function() {
@@ -365,45 +355,43 @@ export default {
       this.spin > 0 ? window.location.reload() : this.resetWheel();
     },
     postToWebhook: function() {
-      if (this.prizeName === "👻👻") {
+      if (this.prizeName === "👻👻" || !this.standupBotToken) {
+        console.log('Invalid prize name or stand up bot token.')
         return;
       }
-      if (this.webhook && this.validWebhookUrl()) {
-        // const content = `🥳🥳 ${this.prizeName} won! 🥳🥳`;
-        axios
-          .post(this.webhook, {
-            tts: true,
-            content: `Yay, ${this.prizeName} won the prize!!!`,
-            embeds: [
-              {
-                title: this.title,
-                color: 261297,
-                footer: {
-                  text: `${this.prizeName} will host standup tomorrow!`,
-                },
-                thumbnail: {
-                  url:
-                    "https://media.giphy.com/media/3o7WIOU62pfc2Ox76o/giphy.gif",
-                },
-                // image: {
-                //   url: "https://picsum.photos/200",
-                // },
-                fields: [
-                  {
-                    name: "🥳🥳🥳🥳🥳🥳🥳🥳🥳🥳",
-                    value: `Yay, ${this.prizeName} won the prize!!!`,
-                  },
-                ],
-              },
-            ],
-          })
-          .then(function(response) {
-            console.log(response);
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+
+      const body = {
+        query: `
+        mutation ($contributor: String!, $sharing: String!) {
+          insert_shares (objects: {
+            contributor: $contributor,
+            sharing: $sharing
+          }) {
+            affected_rows
+          }
+        }
+        `,
+        variables: {
+          contributor: "LUCKY SPIN",
+          sharing: `${ this.prizeName } will host the next standup!`,
+        }
       }
+
+      axios.post(
+        "https://sj-stand-up-bot.herokuapp.com/v1/graphql",
+        body,
+        {
+          headers: {
+            "content-type": "application/json",
+            "Authorization": `Bearer ${this.standupBotToken}` 
+          }
+        })
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
     },
   },
   mounted() {
