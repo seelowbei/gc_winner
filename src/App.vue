@@ -324,6 +324,14 @@ export default {
     shuffle: function() {
       this.spin > 0 ? window.location.reload() : this.resetWheel();
     },
+    members() {
+      return this.segments.reduce((list, item) => {
+        if (item.text !== "👻👻") {
+          list.push(item.text);
+        }
+        return list;
+      }, []);
+    },
     postToWebhook: function() {
       if (this.prizeName === "👻👻") {
         console.log("Invalid prize name or stand up bot token.");
@@ -335,6 +343,10 @@ export default {
       }
     },
     postToSJStandupBot: function() {
+      const members = this.members()
+        .sort()
+        .join(", ");
+      const sharing = `${this.prizeName} will host the next standup! Members: ${members}`;
       const body = {
         query: `
         mutation ($contributor: String!, $sharing: String!) {
@@ -346,10 +358,7 @@ export default {
           }
         }
         `,
-        variables: {
-          contributor: "LUCKY SPIN",
-          sharing: `${this.prizeName} will host the next standup!`
-        }
+        variables: { contributor: "LUCKY SPIN", sharing }
       };
 
       axios
@@ -367,6 +376,7 @@ export default {
         });
     },
     postToInputWebhook: function() {
+      console.log(this.segments.map(item => item.text));
       if (this.webhook && this.validWebhookUrl()) {
         axios
           .post(this.webhook, {
@@ -390,6 +400,12 @@ export default {
                   {
                     name: "🥳🥳🥳🥳🥳🥳🥳🥳🥳🥳",
                     value: `Yay, ${this.prizeName} won the prize!!!`
+                  },
+                  {
+                    name: "Members",
+                    value: this.members()
+                      .sort()
+                      .join(", ")
                   }
                 ]
               }
