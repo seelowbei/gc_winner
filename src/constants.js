@@ -15,13 +15,6 @@ export const DEFAULT_OPTIONS = [
   },
   {
     textFillStyle: '#fff',
-    fillStyle: '#8AC926',
-    textFontSize: 20,
-    textFontWeight: 100,
-    text: 'Jany'
-  },
-  {
-    textFillStyle: '#fff',
     fillStyle: '#1982C4',
     textFontSize: 20,
     textFontWeight: 100,
@@ -46,7 +39,7 @@ export const DEFAULT_OPTIONS = [
     fillStyle: '#5887FF',
     textFontSize: 20,
     textFontWeight: 100,
-    text: 'Jarrett'
+    text: 'KC'
   },
   {
     textFillStyle: '#fff',
