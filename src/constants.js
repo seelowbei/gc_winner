@@ -4,63 +4,63 @@ export const DEFAULT_OPTIONS = [
     fillStyle: '#333',
     textFontSize: 20,
     textFontWeight: 100,
-    text: '👻👻'
+    text: "McDonald's"
   },
   {
     textFillStyle: '#fff',
     fillStyle: '#6A4C93',
     textFontSize: 20,
     textFontWeight: 100,
-    text: 'Sam'
+    text: 'MaxWell'
   },
   {
     textFillStyle: '#fff',
     fillStyle: '#1982C4',
     textFontSize: 20,
     textFontWeight: 100,
-    text: 'Hui Tian'
+    text: '100AM Foodcourt'
   },
   {
     textFillStyle: '#fff',
     fillStyle: '#C3423F',
     textFontSize: 20,
     textFontWeight: 100,
-    text: 'Celine'
+    text: 'Fun Toast'
   },
   {
     textFillStyle: '#fff',
     fillStyle: '#048BA8',
     textFontSize: 18,
     textFontWeight: 100,
-    text: 'Thiam Hock'
+    text: 'Mos Burger'
   },
   {
     textFillStyle: '#fff',
     fillStyle: '#5887FF',
     textFontSize: 20,
     textFontWeight: 100,
-    text: 'KC'
+    text: 'TP Plaza L2'
   },
   {
     textFillStyle: '#fff',
     fillStyle: '#2C2A4A',
     textFontSize: 20,
     textFontWeight: 100,
-    text: 'Vincent'
+    text: 'Prata Shop'
   },
   {
     textFillStyle: '#fff',
     fillStyle: '#333',
     textFontSize: 20,
     textFontWeight: 100,
-    text: '👻👻'
+    text: 'TP Market'
   },
   {
     textFillStyle: '#fff',
     fillStyle: '#E01A4F',
     textFontSize: 20,
     textFontWeight: 100,
-    text: 'Justin'
+    text: 'Amoy Food Centre'
   },
 ];
 
