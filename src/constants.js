@@ -18,7 +18,7 @@ export const DEFAULT_OPTIONS = [
     fillStyle: '#1982C4',
     textFontSize: 20,
     textFontWeight: 100,
-    text: '100AM Foodcourt'
+    text: '100AM FC'
   },
   {
     textFillStyle: '#fff',
@@ -39,7 +39,7 @@ export const DEFAULT_OPTIONS = [
     fillStyle: '#5887FF',
     textFontSize: 20,
     textFontWeight: 100,
-    text: 'TP Plaza L2'
+    text: 'TP L2'
   },
   {
     textFillStyle: '#fff',
@@ -60,7 +60,7 @@ export const DEFAULT_OPTIONS = [
     fillStyle: '#E01A4F',
     textFontSize: 20,
     textFontWeight: 100,
-    text: 'Amoy Food Centre'
+    text: 'Amoy FC'
   },
 ];
 

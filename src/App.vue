@@ -141,7 +141,7 @@ export default {
   data() {
     const segments =
       JSON.parse(localStorage.getItem("segments")) || DEFAULT_OPTIONS;
-    const title = localStorage.getItem("title") || "GC AWARDS";
+    const title = localStorage.getItem("title") || "EAT WHAT";
     const webhook = localStorage.getItem("webhook") || "";
     return {
       titleType: "",
@@ -433,7 +433,7 @@ body {
   height: 100vh;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url(https://images.unsplash.com/photo-1495195129352-aeb325a55b65?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1655&q=80);
+  background-image: url(https://images.unsplash.com/photo-1603073388284-5f78ed8b6177?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1650&q=80);
   overflow: scroll;
 }
 .wheel-wrapper {
