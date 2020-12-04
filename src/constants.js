@@ -62,20 +62,6 @@ export const DEFAULT_OPTIONS = [
     textFontWeight: 100,
     text: 'Justin'
   },
-  {
-    textFillStyle: '#fff',
-    fillStyle: '#C3423F',
-    textFontSize: 20,
-    textFontWeight: 100,
-    text: 'YaoJie'
-  },
-  {
-    textFillStyle: '#fff',
-    fillStyle: '#6A4C93',
-    textFontSize: 20,
-    textFontWeight: 100,
-    text: 'Jaslyn'
-  }
 ];
 
 export const COLORS = [
