@@ -11,7 +11,7 @@ export const DEFAULT_OPTIONS = [
     fillStyle: '#6A4C93',
     textFontSize: 20,
     textFontWeight: 100,
-    text: 'Sam'
+    text: 'Willie'
   },
   {
     textFillStyle: '#fff',
