@@ -27,3 +27,7 @@ yarn run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+### Tick Sound
+- "Tick" sound created by DeepFrozenApps and downloaded from https://soundbible.com/2044-Tick.html

@@ -2,7 +2,12 @@
   <div id="app">
     <section class="hero">
       <div class="title-bar">
-        <b-icon icon="settings" size="is-large" type="is-dark" @click.native="openModal()" />
+        <b-icon
+          icon="settings"
+          size="is-large"
+          type="is-dark"
+          @click.native="openModal()"
+        />
         <h1 class="page-title">{{ title }}</h1>
       </div>
     </section>
@@ -13,7 +18,14 @@
           <div class="wheel-wrapper">
             <div class="canvas-wrapper" id="canvas-wrapper">
               <canvas id="canvas" width="310" height="310">
-                <p style="{color: white}" align="center">
+                <p
+                  style="
+                     {
+                      color: white;
+                    }
+                  "
+                  align="center"
+                >
                   Sorry, your browser doesn't support canvas. Please try Google
                   Chrome.
                 </p>
@@ -27,7 +39,8 @@
                 icon-right="star"
                 :disabled="wheelSpinning"
                 @click.prevent="startSpin()"
-              >SPIN</b-button>
+                >SPIN</b-button
+              >
 
               <b-button
                 class="btn btn-shuffle"
@@ -35,11 +48,16 @@
                 icon-left="shuffle"
                 :disabled="wheelSpinning"
                 @click.prevent="shuffle()"
-              >SHUFFLE</b-button>
+                >SHUFFLE</b-button
+              >
             </div>
           </div>
         </div>
-        <b-modal :active.sync="modalPrize" custom-class="prize" @close="resetWheel()">
+        <b-modal
+          :active.sync="modalPrize"
+          custom-class="prize"
+          @close="resetWheel()"
+        >
           <canvas id="winner-canvas"></canvas>
           <section class>
             <div class="winner">
@@ -50,11 +68,21 @@
         </b-modal>
       </section>
     </div>
-    <b-modal :active.sync="modalActive" has-modal-card full-screen :can-cancel="false">
+    <b-modal
+      :active.sync="modalActive"
+      has-modal-card
+      full-screen
+      :can-cancel="false"
+    >
       <div class="modal-card" style="width: auto">
         <header class="modal-card-head">
           <p class="modal-card-title">CONFIGURATIONS</p>
-          <b-icon icon="close" size="is-medium" type="is-dark" @click.native="closeModal()" />
+          <b-icon
+            icon="close"
+            size="is-medium"
+            type="is-dark"
+            @click.native="closeModal()"
+          />
         </header>
         <section class="modal-card-body">
           <b-field label="Title" :type="titleType" custom-class="title-label">
@@ -69,11 +97,20 @@
           <div class="options-section">
             <label class="label title-label">Options</label>
             <span>
-              <b-button type="is-primary" inverted @click="applyDefaultOptions()">
-                <b-icon icon="undo-variant" size="is-small" type="is-primary" />Use Default
+              <b-button
+                type="is-primary"
+                inverted
+                @click="applyDefaultOptions()"
+              >
+                <b-icon
+                  icon="undo-variant"
+                  size="is-small"
+                  type="is-primary"
+                />Use Default
               </b-button>
               <b-button type="is-primary" inverted @click="removeAllOptions()">
-                <b-icon icon="delete" size="is-small" type="is-primary" />Delete All
+                <b-icon icon="delete" size="is-small" type="is-primary" />Delete
+                All
               </b-button>
             </span>
           </div>
@@ -91,10 +128,15 @@
               size="is-medium"
               icon-left="plus"
               @click="addOption()"
-            >Add</b-button>
+              >Add</b-button
+            >
           </b-field>
           <b-field grouped group-multiline class="options-section">
-            <div class="control" v-bind:key="index" v-for="(item, index) in segments">
+            <div
+              class="control"
+              v-bind:key="index"
+              v-for="(item, index) in segments"
+            >
               <div class="control">
                 <div class="tags has-addons">
                   <span
@@ -115,14 +157,19 @@
             </div>
           </b-field>
 
-          <b-field label="Discord Webhook" :type="webhookType" custom-class="webhook-label">
+          <b-field
+            label="Discord Webhook"
+            :type="webhookType"
+            custom-class="webhook-label"
+          >
             <b-input
               name="Discord Webhook"
               expanded
               size="is-medium"
               v-model="webhook"
               @change.native="setWebhookType()"
-            >></b-input>
+              >></b-input
+            >
           </b-field>
         </section>
       </div>
@@ -167,19 +214,19 @@ export default {
         lineWidth: 8,
         animation: {
           type: "spinOngoing",
-          duration: 0.5
-        }
-      }
+          duration: 0.5,
+        },
+      },
     };
   },
   computed: {
-    standupBotToken: function() {
+    standupBotToken: function () {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get("token");
-    }
+    },
   },
   methods: {
-    validWebhookUrl: function() {
+    validWebhookUrl: function () {
       const hook = this.webhook;
       if (hook) {
         try {
@@ -191,39 +238,39 @@ export default {
 
       return true;
     },
-    shuffleArray: function(array) {
+    shuffleArray: function (array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
       return array;
     },
-    closeModal: function() {
+    closeModal: function () {
       this.modalActive = false;
       this.titleType = "";
       this.webhookType = "";
       this.option = null;
       this.shuffle();
     },
-    openModal: function() {
+    openModal: function () {
       this.modalActive = true;
     },
-    setTitleType: function() {
+    setTitleType: function () {
       localStorage.setItem("title", this.title);
       this.titleType = "is-success";
     },
-    setWebhookType: function() {
+    setWebhookType: function () {
       localStorage.setItem("webhook", this.webhook);
       this.webhookType = this.validWebhookUrl() ? "is-success" : "is-danger";
     },
-    removeAllOptions: function() {
+    removeAllOptions: function () {
       this.segments = [];
       localStorage.clear();
     },
-    applyDefaultOptions: function() {
+    applyDefaultOptions: function () {
       this.segments = DEFAULT_OPTIONS;
     },
-    addOption: function() {
+    addOption: function () {
       if (this.option) {
         const fillColor = this.getFillColor();
         const newOption = {
@@ -231,53 +278,68 @@ export default {
           fillStyle: fillColor,
           textFontSize: 20,
           textFontWeight: 100,
-          text: this.option
+          text: this.option,
         };
         this.segments.push(newOption);
         localStorage.setItem("segments", JSON.stringify(this.segments));
         this.option = null;
       }
     },
-    getFillColor: function() {
+    getFillColor: function () {
       return this.fillColors[
         (this.segments.length + 1) % this.fillColorsLength
       ];
     },
-    removeOption: function(index) {
+    removeOption: function (index) {
       this.segments.splice(index, 1);
       this.segments = this.segments;
       localStorage.setItem("segments", JSON.stringify(this.segments));
     },
-    showPrize: function() {
+    showPrize: function () {
       this.modalPrize = true;
     },
-    hidePrize: function() {
+    hidePrize: function () {
       this.modalPrize = false;
     },
-    startSpin: function() {
+    startSpin: function () {
       if (this.segments.length === 0) {
         this.$buefy.toast.open({
           duration: 3000,
           message: "Please add some options.",
           position: "is-top",
-          type: "is-danger"
+          type: "is-danger",
         });
         return;
       }
       if (this.wheelSpinning === false) {
         this.theWheel.startAnimation();
         this.wheelSpinning = true;
+        const segmentsLength = this.segments.length;
         this.theWheel = new Winwheel.Winwheel(
           {
             ...this.WinWheelOptions,
-            numSegments: this.segments.length,
+            numSegments: segmentsLength,
             segments: this.shuffleArray(this.segments),
+            pins: {
+              number: segmentsLength * 2,
+              outerRadius: 5,
+              margin: 0,
+              fillStyle: "black",
+              strokeStyle: "rgb(239, 239, 239)",
+            },
             animation: {
               type: "spinToStop",
               duration: Math.ceil(Math.random() * 10),
               spins: Math.ceil(Math.random() * 20),
-              callbackFinished: this.onFinishSpin
-            }
+              callbackFinished: this.onFinishSpin,
+              soundTrigger: "pin",
+              callbackSound: () => {
+                let audio = new Audio("tick.mp3");
+                audio.pause();
+                audio.currentTime = 0;
+                audio.play();
+              },
+            },
           },
           false
         );
@@ -290,7 +352,7 @@ export default {
         this.theWheel.startAnimation();
       }
     },
-    resetWheel: function() {
+    resetWheel: function () {
       if (this.wheelSpinning) {
         this.theWheel.stopAnimation(false);
         this.wheelSpinning = false;
@@ -301,13 +363,13 @@ export default {
         numSegments: this.segments.length,
         segments: this.shuffleArray(this.segments),
         clearTheCanvas: true,
-        rotationAngle: 0
+        rotationAngle: 0,
       });
 
       this.theWheel.draw();
       this.theWheel.rotationAngle = 0;
     },
-    onFinishSpin: function(indicatedSegment) {
+    onFinishSpin: function (indicatedSegment) {
       this.wheelSpinning = false;
       this.prizeName = indicatedSegment.text;
       this.showPrize();
@@ -315,13 +377,13 @@ export default {
       this.postToWebhook();
       setTimeout(() => {
         const confettiSettings = {
-          target: "winner-canvas"
+          target: "winner-canvas",
         };
         const confetti = new ConfettiGenerator(confettiSettings);
         confetti.render();
       }, 200);
     },
-    shuffle: function() {
+    shuffle: function () {
       this.spin > 0 ? window.location.reload() : this.resetWheel();
     },
     members() {
@@ -332,7 +394,7 @@ export default {
         return list;
       }, []);
     },
-    postToWebhook: function() {
+    postToWebhook: function () {
       if (this.prizeName === "👻👻") {
         console.log("Invalid prize name or stand up bot token.");
         return;
@@ -342,10 +404,8 @@ export default {
         this.postToInputWebhook();
       }
     },
-    postToSJStandupBot: function() {
-      const members = this.members()
-        .sort()
-        .join(", ");
+    postToSJStandupBot: function () {
+      const members = this.members().sort().join(", ");
       const sharing = `${this.prizeName} will host the next standup! Members: ${members}`;
       const body = {
         query: `
@@ -358,24 +418,24 @@ export default {
           }
         }
         `,
-        variables: { contributor: "LUCKY SPIN", sharing }
+        variables: { contributor: "LUCKY SPIN", sharing },
       };
 
       axios
         .post("https://sj-stand-up-bot.herokuapp.com/v1/graphql", body, {
           headers: {
             "content-type": "application/json",
-            Authorization: `Bearer ${this.standupBotToken}`
-          }
+            Authorization: `Bearer ${this.standupBotToken}`,
+          },
         })
-        .then(function(response) {
+        .then(function (response) {
           console.log(response);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
     },
-    postToInputWebhook: function() {
+    postToInputWebhook: function () {
       if (this.webhook && this.validWebhookUrl()) {
         axios
           .post(this.webhook, {
@@ -386,11 +446,11 @@ export default {
                 title: this.title,
                 color: 261297,
                 footer: {
-                  text: `🥳🥳 ${this.prizeName} won! 🥳🥳`
+                  text: `🥳🥳 ${this.prizeName} won! 🥳🥳`,
                 },
                 thumbnail: {
                   url:
-                    "https://media.giphy.com/media/3o7WIOU62pfc2Ox76o/giphy.gif"
+                    "https://media.giphy.com/media/3o7WIOU62pfc2Ox76o/giphy.gif",
                 },
                 // image: {
                 //   url: "https://picsum.photos/200",
@@ -398,30 +458,28 @@ export default {
                 fields: [
                   {
                     name: "🥳🥳🥳🥳🥳🥳🥳🥳🥳🥳",
-                    value: `Yay, ${this.prizeName} won the prize!!!`
+                    value: `Yay, ${this.prizeName} won the prize!!!`,
                   },
                   {
                     name: "Members",
-                    value: this.members()
-                      .sort()
-                      .join(", ")
-                  }
-                ]
-              }
-            ]
+                    value: this.members().sort().join(", "),
+                  },
+                ],
+              },
+            ],
           })
-          .then(function(response) {
+          .then(function (response) {
             console.log(response);
           })
-          .catch(function(error) {
+          .catch(function (error) {
             console.log(error);
           });
       }
-    }
+    },
   },
   mounted() {
     this.resetWheel();
-  }
+  },
 };
 </script>
 
