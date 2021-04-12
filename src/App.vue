@@ -376,7 +376,6 @@ export default {
         });
     },
     postToInputWebhook: function() {
-      console.log(this.segments.map(item => item.text));
       if (this.webhook && this.validWebhookUrl()) {
         axios
           .post(this.webhook, {
