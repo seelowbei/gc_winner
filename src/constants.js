@@ -15,13 +15,6 @@ export const DEFAULT_OPTIONS = [
   },
   {
     textFillStyle: '#fff',
-    fillStyle: '#5887FF',
-    textFontSize: 20,
-    textFontWeight: 100,
-    text: 'KC'
-  },
-  {
-    textFillStyle: '#fff',
     fillStyle: '#333',
     textFontSize: 20,
     textFontWeight: 100,
