@@ -1,13 +1,6 @@
 export const DEFAULT_OPTIONS = [
   {
     textFillStyle: '#fff',
-    fillStyle: '#333',
-    textFontSize: 20,
-    textFontWeight: 100,
-    text: '👻👻'
-  },
-  {
-    textFillStyle: '#fff',
     fillStyle: '#6A4C93',
     textFontSize: 20,
     textFontWeight: 100,
@@ -22,31 +15,10 @@ export const DEFAULT_OPTIONS = [
   },
   {
     textFillStyle: '#fff',
-    fillStyle: '#C3423F',
-    textFontSize: 20,
-    textFontWeight: 100,
-    text: 'Celine'
-  },
-  {
-    textFillStyle: '#fff',
-    fillStyle: '#048BA8',
-    textFontSize: 18,
-    textFontWeight: 100,
-    text: 'Thiam Hock'
-  },
-  {
-    textFillStyle: '#fff',
     fillStyle: '#5887FF',
     textFontSize: 20,
     textFontWeight: 100,
     text: 'KC'
-  },
-  {
-    textFillStyle: '#fff',
-    fillStyle: '#2C2A4A',
-    textFontSize: 20,
-    textFontWeight: 100,
-    text: 'Vincent'
   },
   {
     textFillStyle: '#fff',
